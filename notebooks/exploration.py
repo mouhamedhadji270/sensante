@@ -64,6 +64,17 @@ def main():
     else:
         print("Colonnes necessaires manquantes (diagnostic, temperature).")
 
+    # ==========================================================
+    # EXERCICE 1 : ANALYSE CROISEE (Sexe et Diagnostic)
+    # ==========================================================
+    print("\n--- Analyse croisee : Sexe et Diagnostic ---")
+    if "sexe" in df.columns and "diagnostic" in df.columns:
+        # Utilisation de groupby().size() comme demande dans l'exercice
+        analyse_croisee = df.groupby(["sexe", "diagnostic"]).size()
+        print(analyse_croisee)
+    else:
+        print("Colonnes 'sexe' ou 'diagnostic' manquantes pour l'analyse croisee.")
+
 
     print("\n" + "=" * 50)
     print("Exploration terminee")
