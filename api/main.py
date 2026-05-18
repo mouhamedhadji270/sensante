@@ -27,6 +27,23 @@ app = FastAPI(
     description="Assistant pré-diagnostic médical pour le Sénégal",
     version="0.2.0"
 )
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# Autoriser les requetes depuis le frontend
+app.add_middleware(
+    CORSMiddleware,
+
+    allow_origins=["*"],
+
+    # En developpement : tout accepter
+    allow_credentials=True,
+
+    allow_methods=["*"],
+
+    allow_headers=["*"],
+)
+
 import joblib
 import numpy as np
 #--- Charger le modele et les encodeurs au demarrage--
@@ -46,6 +63,19 @@ def health_check():
     return {
         "status": "ok",
         "message": "SenSante API is running"
+    }
+    
+    # Infos modèle
+@app.get("/model-info")
+def model_info():
+    """
+    Retourne les informations du modèle IA.
+    """
+    return {
+        "type_modele": type(model).__name__,
+        "nombre_arbres": model.n_estimators,
+        "classes_possibles": list(model.classes_),
+        "nombre_features": len(feature_cols)
     }
 
 @app.post("/predict", response_model=DiagnosticOutput)
@@ -144,3 +174,4 @@ def predict(patient: PatientInput):
             "Consultez un médecin."
         )
     )
+    
